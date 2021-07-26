@@ -11,7 +11,8 @@ def WelcomeMsg():
 
 @app.route('/video')
 def video():
-	cap=cv2.VideoCapture(0)
+	#cap=cv2.VideoCapture(0)
+	cap=cv2.VideoCapture('Handvideo.mp4')
 
 	medhands=mediapipe.solutions.hands
 	hands=medhands.Hands(max_num_hands=1,min_detection_confidence=0.7)
@@ -89,27 +90,32 @@ def video():
 					#change color of points and lines
 					draw.draw_landmarks(img,handlms,medhands.HAND_CONNECTIONS,draw.DrawingSpec(color=(0,255,204),thickness=2,circle_radius=2),draw.DrawingSpec(color=(0,0,0),thickness=2,circle_radius=3))
 		
-	
-		cv2.imshow("hand gestures",img)
-		
-		#press q to quit
-		if cv2.waitKey(1) == ord('q'):
+		if success:
+			cv2.imshow("hand gestures",img)
+			if cv2.waitKey(1) == ord('q'): #press q to quit
+				logging.info('You pressed "q" button')
+				break
+		else :
+			logging.info('Video ended here...')
+			errorhandler(500)
 			break
+		
+		
 		
 	cv2.destroyAllWindows()
 			
 @app.errorhandler(500)
 def internal_error(error):
 
-    return 'You Clicked the Esc Button... Please refresh the page to run again!!'
+    return 'You Clicked the Esc Button... Please refresh the page or  run again!!'
 
 @app.errorhandler(404)
 def not_found(error):
-    return 'You Clicked the Esc Button... Please refresh the page to run again!!'
+    return 'You Clicked the Esc Button... Please refresh the page or run again!!'
 	
 @app.errorhandler(Exception)
 def exception_handler(error):
-    return "!!!!"  + repr(error)
+    return '!!\n'+internal_error(500)  #+"\n"+ repr(error)
 	
 if __name__ == '__main__':
   app.run()
