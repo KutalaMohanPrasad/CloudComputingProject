@@ -11,8 +11,8 @@ def WelcomeMsg():
 
 @app.route('/video')
 def video():
-	#cap=cv2.VideoCapture(0)
-	cap=cv2.VideoCapture('Handvideo.mp4')
+	cap=cv2.VideoCapture(0) # 0 for direct camera access
+	#cap=cv2.VideoCapture('Handvideo.mp4') # give video path to read and recognise
 
 	medhands=mediapipe.solutions.hands
 	hands=medhands.Hands(max_num_hands=1,min_detection_confidence=0.7)
